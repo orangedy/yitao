@@ -13,4 +13,7 @@
 		select * from user where id =
 		#{id}
 	</select>
+	<select id="isUserExist" resultType="int">
+		select 1 from user where accountID = #{accountID} limit 1
+	</select>
 </mapper>
