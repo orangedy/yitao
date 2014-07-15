@@ -2,10 +2,12 @@ package com.netease.shijin.yitao.dao.impl;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.netease.shijin.yitao.dao.UserDao;
 import com.netease.shijin.yitao.mapper.UserMapper;
 
+@Repository
 public class UserDaoImpl implements UserDao {
 
     @Autowired
@@ -14,15 +16,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean isUserExist(String accountID) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        int result = mapper.isUserExist(accountID);
-        return result == 1 ? true : false;
+        int result = mapper.isUserExist(accountID).size();
+        return result >= 1 ? true : false;
     }
 
     @Override
     public long updateUserInfo(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         mapper.updateUserInfo(accountID, nickName, iconURL);
-        long userID = mapper.getUserID(accountID);
+        long userID = Long.valueOf(mapper.getUserID(accountID));
         return userID;
     }
 
@@ -30,7 +32,7 @@ public class UserDaoImpl implements UserDao {
     public long addUser(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         mapper.addUser(accountID, nickName, iconURL);
-        long userID = mapper.getUserID(accountID);
+        long userID = Long.valueOf(mapper.getUserID(accountID));
         return userID;
     }
 
