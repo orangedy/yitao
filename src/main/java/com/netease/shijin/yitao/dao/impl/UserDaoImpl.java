@@ -16,30 +16,26 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean isUserExist(String accountID) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        int result = mapper.isUserExist(accountID).size();
-        return result >= 1 ? true : false;
+        Object result = mapper.isUserExist(accountID);
+        return result != null ? true : false;
     }
 
     @Override
-    public long updateUserInfo(String accountID, String nickName, String iconURL) {
+    public void updateUserInfo(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         mapper.updateUserInfo(accountID, nickName, iconURL);
-        long userID = Long.valueOf(mapper.getUserID(accountID));
-        return userID;
     }
 
     @Override
-    public long addUser(String accountID, String nickName, String iconURL) {
+    public void addUser(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         mapper.addUser(accountID, nickName, iconURL);
-        long userID = Long.valueOf(mapper.getUserID(accountID));
-        return userID;
     }
 
     @Override
-    public String getUserID(String accountID) {
-        // TODO Auto-generated method stub
-        return null;
+    public long getUserID(String accountID) {
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        return mapper.getUserID(accountID);
     }
 
 }

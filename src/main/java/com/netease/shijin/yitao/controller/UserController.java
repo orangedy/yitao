@@ -18,6 +18,13 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 用户登录功能，当用户第一次使用第三方账号登录时，创建用户，否则更新用户信息
+     * @param nickName 用户昵称
+     * @param accountID 用户第三方账号的ID，唯一的标识
+     * @param iconURL 用户第三方头像的链接
+     * @return
+     */
     @RequestMapping("/createAccount")
     public @ResponseBody
     ResponseBean login(@RequestParam String nickName, @RequestParam String accountID, @RequestParam String iconURL) {
@@ -30,14 +37,26 @@ public class UserController extends BaseController {
         return response;
     }
 
-    public @ResponseBody
-    ResponseBean modifyInfo(@RequestParam long userID, @RequestParam String nickName, @RequestParam String address) {
-        ResponseBean response = new ResponseBean();
-        userService.modifyInfo(userID, nickName, address);
-        response.setCode(200);
-        return response;
-    }
+    /**
+     * 修改用户信息，该功能暂不提供
+     * @param userID
+     * @param nickName
+     * @param address
+     * @return
+     */
+//    public @ResponseBody
+//    ResponseBean modifyInfo(@RequestParam long userID, @RequestParam String nickName, @RequestParam String address) {
+//        ResponseBean response = new ResponseBean();
+//        userService.modifyInfo(userID, nickName, address);
+//        response.setCode(200);
+//        return response;
+//    }
 
+    /**
+     * 用户推出登录，目前只是客户端退出，后台不做操作，后期可能加上session操作
+     * @param userID
+     * @return
+     */
     public @ResponseBody
     ResponseBean logout(@RequestParam long userID) {
         ResponseBean response = new ResponseBean();

@@ -16,10 +16,11 @@ public class UserServiceImpl implements UserService {
     public long login(String accountID, String nickName, String iconURL) {
         long userID;
         if (userDao.isUserExist(accountID)) {
-            userID = userDao.updateUserInfo(accountID, nickName, iconURL);
+            userDao.updateUserInfo(accountID, nickName, iconURL);
         } else {
-            userID = userDao.addUser(accountID, nickName, iconURL);
+            userDao.addUser(accountID, nickName, iconURL);
         }
+        userID = userDao.getUserID(accountID);
         return userID;
     }
 
