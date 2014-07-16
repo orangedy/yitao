@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.netease.shijin.yitao.mapper.ItemMapper">
+	<resultMap type="com.netease.shijin.yitao.bean.ItemBean" id="item">
+		<result column="id" property="itemID" />
+		<result column="name" property="itemName" />
+		<result column="description" property="itemDescription" />
+		<result column="price" property="itemPrice" />
+		<result column="condition" property="conditon" />
+		<result column="picture" property="imgURL" />
+		<result column="publishtime" property="timestamp" />
+	</resultMap>
+	
+	<select id="queryItem" resultType="java.lang.Long">
+		select id,name,description,price,condition,picture,publishtime,positionx,positiony from item 
+		where category = #{category} and condition >= #{conditon} 
+		and positionx between (#{positionx} - #{longi}) and (#{positionx} + #{longi})
+		and positiony between (#{positiony} - #{lati}) and (#{positiony} + #{lati})
+	</select>
+</mapper>

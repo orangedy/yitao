@@ -29,9 +29,9 @@ public class UserController extends BaseController {
     public @ResponseBody
     ResponseBean login(@RequestParam String nickName, @RequestParam String accountID, @RequestParam String iconURL) {
         ResponseBean response = new ResponseBean();
-        long userID = userService.login(accountID, nickName, iconURL);
+        String userID = userService.login(accountID, nickName, iconURL);
         response.setCode(200);
-        Map<String, Long> result = new HashMap<String, Long>();
+        Map<String, String> result = new HashMap<String, String>();
         result.put("userID", userID);
         response.setData(result);
         return response;

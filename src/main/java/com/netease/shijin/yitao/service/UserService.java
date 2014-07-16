@@ -2,7 +2,7 @@ package com.netease.shijin.yitao.service;
 
 public interface UserService {
     
-    public long login(String accountID, String nickName, String iconURL);
+    public String login(String accountID, String nickName, String iconURL);
     
     public void logout(long userID);
 

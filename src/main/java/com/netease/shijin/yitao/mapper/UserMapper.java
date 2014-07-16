@@ -9,8 +9,8 @@ public interface UserMapper {
     public int updateUserInfo(@Param("accountID") String accountID, @Param("nickName") String nickName,
                     @Param("iconURL") String iconURL);
 
-    public int addUser(@Param("accountID") String accountID, @Param("nickName") String nickName,
+    public int addUser(@Param("userID") String userID, @Param("accountID") String accountID, @Param("nickName") String nickName,
                     @Param("iconURL") String iconURL);
 
-    public long getUserID(String accountID);
+    public String getUserID(String accountID);
 }

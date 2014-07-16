@@ -8,5 +8,5 @@ public interface UserDao {
     
     public void addUser(String accountID, String nickName, String iconURL);
     
-    public long getUserID(String accountID);
+    public String getUserID(String accountID);
 }

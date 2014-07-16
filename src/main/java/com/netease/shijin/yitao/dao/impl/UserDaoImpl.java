@@ -1,5 +1,7 @@
 package com.netease.shijin.yitao.dao.impl;
 
+import java.util.UUID;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,11 +31,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addUser(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        mapper.addUser(accountID, nickName, iconURL);
+        UUID uuid = UUID.randomUUID();
+        mapper.addUser(uuid.toString(),accountID, nickName, iconURL);
     }
 
     @Override
-    public long getUserID(String accountID) {
+    public String getUserID(String accountID) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
         return mapper.getUserID(accountID);
     }

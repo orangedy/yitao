@@ -13,11 +13,12 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public long login(String accountID, String nickName, String iconURL) {
-        long userID;
+    public String login(String accountID, String nickName, String iconURL) {
+        String userID;
         if (userDao.isUserExist(accountID)) {
             userDao.updateUserInfo(accountID, nickName, iconURL);
         } else {
+            //TODO add userid
             userDao.addUser(accountID, nickName, iconURL);
         }
         userID = userDao.getUserID(accountID);
