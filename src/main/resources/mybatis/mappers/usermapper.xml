@@ -13,7 +13,7 @@
 	<insert id="addUser">
 		insert into user(userid,nickname,accountid,iconurl) values(#{userID},#{nickName},#{accountID},#{iconURL})
 	</insert>
-	<select id="getUserID" resultType="java.long.String">
+	<select id="getUserID" resultType="java.lang.String">
 		select userid from user where accountid = #{accountID} limit 1
 	</select>
 </mapper>

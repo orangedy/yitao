@@ -7,6 +7,6 @@ import com.netease.shijin.yitao.bean.QueryBean;
 
 public interface ItemDao {
 
-    List<ItemBean> queryItem(QueryBean query, double longi, double lati);
+    List<ItemBean> queryItem(QueryBean query);
 
 }

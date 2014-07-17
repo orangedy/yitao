@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.netease.shijin.yitao.dao.UserDao;
 import com.netease.shijin.yitao.mapper.UserMapper;
+import com.netease.shijin.yitao.tool.UUIDUtil;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -31,8 +32,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addUser(String accountID, String nickName, String iconURL) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        UUID uuid = UUID.randomUUID();
-        mapper.addUser(uuid.toString(),accountID, nickName, iconURL);
+        String userID = UUIDUtil.getUUID();
+        mapper.addUser(userID, accountID, nickName, iconURL);
     }
 
     @Override

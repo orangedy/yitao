@@ -1,5 +1,8 @@
 package com.netease.shijin.yitao.bean;
 
+
+import java.sql.Timestamp;
+
 import lombok.Data;
 
 @Data
@@ -11,13 +14,13 @@ public class ItemBean {
     
     private String itemDescription;
     
-    private String[] imgURL;
+    private String imgURL;
     
     private int itemPrice;
     
-    private int condition;
+    private int degree;
     
-    private long timestamp;
+    private Timestamp timestamp;
     
     private double positionX;
     

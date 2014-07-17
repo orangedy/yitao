@@ -9,15 +9,44 @@
 		<result column="name" property="itemName" />
 		<result column="description" property="itemDescription" />
 		<result column="price" property="itemPrice" />
-		<result column="condition" property="conditon" />
+		<result column="degree" property="degree" />
 		<result column="picture" property="imgURL" />
 		<result column="publishtime" property="timestamp" />
+		<result column="positionx" property="positionX" />
+		<result column="positiony" property="positionY" />
 	</resultMap>
-	
-	<select id="queryItem" resultType="java.lang.Long">
-		select id,name,description,price,condition,picture,publishtime,positionx,positiony from item 
-		where category = #{category} and condition >= #{conditon} 
-		and positionx between (#{positionx} - #{longi}) and (#{positionx} + #{longi})
-		and positiony between (#{positiony} - #{lati}) and (#{positiony} + #{lati})
+
+	<select id="queryItem" resultMap="item">
+		select itemid,name,description,price,degree,picture,publishtime,positionx,positiony
+		from item where
+		<if test="categoryType != 0">
+			category = #{categoryType} and
+		</if>
+		<choose>
+			<when test="degreeType == 0">
+			</when>
+			<when test="degreeType == 1">
+				degree >= 10 and
+			</when>
+			<when test="degreeType == 2">
+				degree >= 9 and
+			</when>
+			<when test="degreeType == 3">
+				degree >=8 and
+			</when>
+			<when test="degreeType == 4">
+				degree >= 7 and
+			</when>
+			<when test="degreeType == 5">
+				<![CDATA[
+					degree <= 6 and
+				]]>
+			</when>
+		</choose>
+		positionx between #{longiMin} and #{longiMax}
+		and positiony between
+		#{latiMin} and #{latiMax} order by publishtime desc
 	</select>
+
+
 </mapper>

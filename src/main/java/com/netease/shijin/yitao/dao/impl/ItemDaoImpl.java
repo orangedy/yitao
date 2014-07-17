@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.QueryBean;
+import com.netease.shijin.yitao.bean.QueryRequestBean;
 import com.netease.shijin.yitao.dao.ItemDao;
 import com.netease.shijin.yitao.mapper.ItemMapper;
 
@@ -18,9 +19,9 @@ public class ItemDaoImpl implements ItemDao{
     private SqlSession sqlSession;
 
     @Override
-    public List<ItemBean> queryItem(QueryBean query, double longi, double lati) {
+    public List<ItemBean> queryItem(QueryBean query) {
         ItemMapper mapper = sqlSession.getMapper(ItemMapper.class);
-        List<ItemBean> list = mapper.queryItem(query, longi, lati);
+        List<ItemBean> list = mapper.queryItem(query);
         return list;
     }
 
