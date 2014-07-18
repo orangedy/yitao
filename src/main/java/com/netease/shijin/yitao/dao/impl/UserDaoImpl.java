@@ -1,6 +1,6 @@
 package com.netease.shijin.yitao.dao.impl;
 
-import java.util.UUID;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean isUserExist(String accountID) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        Object result = mapper.isUserExist(accountID);
-        return result != null ? true : false;
+        List<Integer> result = mapper.isUserExist(accountID);
+        return result.size() != 0 ? true : false;
     }
 
     @Override

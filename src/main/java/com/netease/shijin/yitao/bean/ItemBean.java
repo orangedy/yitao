@@ -20,11 +20,11 @@ public class ItemBean {
     
     private int degree;
     
-    private Timestamp timestamp;
+    private int category;
+    
+    private Timestamp publishTime;
     
     private double positionX;
     
     private double positionY;
-    
-    private int distance;
 }

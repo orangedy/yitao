@@ -1,24 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.netease.shijin.yitao.mapper.ItemMapper">
 	<resultMap type="com.netease.shijin.yitao.bean.ItemBean" id="item">
-		<result column="id" property="itemID" />
+		<result column="itemid" property="itemID" />
 		<result column="name" property="itemName" />
 		<result column="description" property="itemDescription" />
 		<result column="price" property="itemPrice" />
 		<result column="degree" property="degree" />
-		<result column="picture" property="imgURL" />
-		<result column="publishtime" property="timestamp" />
+		<result column="category" property="category" />
+		<result column="pictureurl" property="imgURL" />
+		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
 		<result column="positiony" property="positionY" />
 	</resultMap>
 
+	<resultMap type="com.netease.shijin.yitao.bean.ItemDetailBean" id="itemDetail">
+		<result column="itemid" property="itemID" />
+		<result column="name" property="itemName" />
+		<result column="description" property="itemDescription" />
+		<result column="price" property="itemPrice" />
+		<result column="degree" property="degree" />
+		<result column="category" property="category" />
+		<result column="pictureurl" property="imgURL" />
+		<result column="publishtime" property="publishTime" />
+		<result column="positionx" property="positionX" />
+		<result column="positiony" property="positionY" />
+		<result column="address" property="address" />
+		<result column="sellerid" property="sellerID" />
+		<result column="sellername" property="sellerName" />
+		<result column="sellerphone" property="sellerTel" />
+		<result column="expiredtime" property="expiredTime" />
+		<result column="status" property="itemState" />
+	</resultMap>
+
 	<select id="queryItem" resultMap="item">
-		select itemid,name,description,price,degree,picture,publishtime,positionx,positiony
-		from item where
+		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony from item where
 		<if test="categoryType != 0">
 			category = #{categoryType} and
 		</if>
@@ -43,10 +60,32 @@
 				]]>
 			</when>
 		</choose>
-		positionx between #{longiMin} and #{longiMax}
-		and positiony between
-		#{latiMin} and #{latiMax} order by publishtime desc
+		positionx between #{longiMin} and #{longiMax} and positiony between #{latiMin} and #{latiMax}
+		order by publishtime desc
 	</select>
 
+	<select id="getItemDetail" resultMap="itemDetail">
+		select itemid, name, description, price, degree, category, positionx, positiony,
+		address, pictureurl, sellerid, sellername, sellerphone, publishtime, expiredtime, status
+		from item where itemid=#{itemID}
+	</select>
 
+	<insert id="addItem">
+		insert into item (itemid, name, description, price, degree, category, positionx, positiony, address,
+		pictureurl, sellerid, sellername, sellerphone, publishtime, expiredtime) values(#{itemID}, #{itemName},
+		#{itemDescription},
+		#{itemPrice}, #{degree}, #{category}, #{positionX}, #{positionY}, #{address},
+		#{imgURL}, #{sellerID}, #{sellerName},
+		#{sellerTel}, #{publishTime}, #{expiredTime})
+	</insert>
+
+	<select id="getMyItem" resultMap="item">
+		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony
+		from item where
+		sellerid=#{userID} order by publishtime desc limit #{start}, #{count}
+	</select>
+
+	<update id="offShelve">
+		update item set status=1 where itemid=#{itemID} and sellerid=#{userID}
+	</update>
 </mapper>
