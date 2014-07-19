@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.netease.shijin.yitao.bean.BaseRequestBean;
 import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.ItemDetailBean;
 import com.netease.shijin.yitao.bean.QueryRequestBean;
@@ -72,11 +73,13 @@ public class ItemController {
         return response;
     }
 
-    @RequestMapping(value = "/offshelve", method = RequestMethod.POST, headers = {"content-type=application/x-www-form-urlencoded"})
+    @RequestMapping(value = "/offshelve", method = RequestMethod.POST, headers = {"content-type=application/json"})
     public @ResponseBody
-    ResponseBean offShelve(@RequestParam String userID, @RequestParam String itemID) {
+    ResponseBean offShelve(@RequestBody BaseRequestBean requestParam) {
         ResponseBean response = new ResponseBean();
         // TODO
+        String userID = requestParam.getUserID();
+        String itemID = requestParam.getItemID();
         boolean result = itemService.offShelve(userID, itemID);
         return response;
     }

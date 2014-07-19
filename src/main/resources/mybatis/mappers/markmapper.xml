@@ -2,8 +2,34 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.netease.shijin.yitao.mapper.MarkMapper">
+	<resultMap type="com.netease.shijin.yitao.bean.ItemBean" id="item">
+		<result column="itemid" property="itemID" />
+		<result column="name" property="itemName" />
+		<result column="description" property="itemDescription" />
+		<result column="price" property="itemPrice" />
+		<result column="degree" property="degree" />
+		<result column="category" property="category" />
+		<result column="pictureurl" property="imgURL" />
+		<result column="publishtime" property="publishTime" />
+		<result column="positionx" property="positionX" />
+		<result column="positiony" property="positionY" />
+	</resultMap>
 	<select id="isMarked">
 		select 1 from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
 	</select>
-	
+
+	<insert id="addMarkRecord">
+		insert into markrecord(userid, itemid) values(#{userID}, #{itemID})
+	</insert>
+
+	<delete id="deleteMarkRecord">
+		delete from markrecord where itemid=#{itemID} and userid=#{userID}
+	</delete>
+
+	<select id="queryMarkRecord" resultMap="item">
+		select
+		item.itemid,item.name,item.description,item.price,item.degree,item.pictureurl,item.publishtime,item.positionx,item.positiony
+		from
+		item, markrecord where item.itemid = markrecord.itemid and markrecord.userid = #{userID}
+	</select>
 </mapper>

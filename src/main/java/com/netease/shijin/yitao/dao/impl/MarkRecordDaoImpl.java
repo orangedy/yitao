@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.MarkRecordBean;
 import com.netease.shijin.yitao.dao.MarkRecordDao;
 import com.netease.shijin.yitao.mapper.MarkMapper;
@@ -35,7 +36,7 @@ public class MarkRecordDaoImpl implements MarkRecordDao {
     }
 
     @Override
-    public List<MarkRecordBean> queryMarkRecord(String userID) {
+    public List<ItemBean> queryMarkRecord(String userID) {
         MarkMapper mapper = sqlSession.getMapper(MarkMapper.class);
         return mapper.queryMarkRecord(userID);
     }
