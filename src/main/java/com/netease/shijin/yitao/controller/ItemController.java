@@ -1,6 +1,7 @@
 package com.netease.shijin.yitao.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,7 @@ public class ItemController {
     public @ResponseBody
     ResponseBean addItem(@RequestBody Map param, HttpServletRequest request) {
         ResponseBean response = new ResponseBean();
+        //解析参数
         ItemDetailBean itemDetail = new ItemDetailBean();
         itemDetail.setExpiredTime(new Timestamp((long) param.get("expiredTime")));
         itemDetail.setPublishTime(new Timestamp((long) param.get("publishTime")));
@@ -77,16 +79,7 @@ public class ItemController {
         itemDetail.setSellerID((String) param.get("sellerID"));
         itemDetail.setSellerName((String) param.get("sellerName"));
         itemDetail.setSellerTel((String) param.get("sellerTel"));
-//        itemDetail.set
-        // 图片url处理
-        String domain = imgServer + request.getContextPath() + "/image/";
-        String imgIDStr = itemDetail.getImgURL();
-        String[] imgIDs = imgIDStr.split(",");
-        String imgURLs = "";
-        for (String imgID : imgIDs) {
-            imgURLs += (domain + imgID + ",");
-        }
-        itemDetail.setImgURL(imgURLs);
+       
         boolean result = itemService.addItem(itemDetail);
         response.setCode(200);
         response.setData(result);
@@ -98,8 +91,14 @@ public class ItemController {
     ResponseBean getMyItem(@RequestParam String userID, @RequestParam int page, @RequestParam int count) {
         ResponseBean response = new ResponseBean();
         List<ItemBean> result = itemService.queryMyItem(userID, page, count);
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for(ItemBean item : result) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("item", item);
+            items.add(map);
+        }
         response.setCode(200);
-        response.setData(result);
+        response.setData(items);
         return response;
     }
 

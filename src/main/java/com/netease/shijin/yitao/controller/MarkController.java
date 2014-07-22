@@ -1,6 +1,9 @@
 package com.netease.shijin.yitao.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,7 +55,14 @@ public class MarkController {
         //TODO
         List<ItemBean> result = markService.getMarkList(userID, page, count);
         response.setCode(200);
-        response.setData(result);
+        List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+        for(ItemBean item : result) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("item", item);
+            items.add(map);
+        }
+        response.setCode(200);
+        response.setData(items);
         return response;
     }
 }

@@ -40,6 +40,12 @@ public class MarkServiceImpl implements MarkService {
     public List<ItemBean> getMarkList(String userID, int page, int count) {
         // TODO Auto-generated method stub
         List<ItemBean> result = markRecordDao.queryMarkRecord(userID);
-        return null;
+        for(ItemBean item : result) {
+            // 图片选择第一张返回
+               String imgURL = item.getImgURL();
+               imgURL = imgURL.split(",")[0];
+               item.setImgURL(imgURL);
+           }
+        return result;
     }
 }

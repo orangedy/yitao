@@ -9,7 +9,7 @@ import com.netease.shijin.yitao.bean.MarkRecordBean;
 
 public interface MarkMapper {
     
-    public List<Integer> isMarked(@Param("userID")String userID, @Param("itemID")String itemID);
+    public Integer isMarked(@Param("userID")String userID, @Param("itemID")String itemID);
 
     public boolean addMarkRecord(@Param("userID")String userID, @Param("itemID")String itemID);
 

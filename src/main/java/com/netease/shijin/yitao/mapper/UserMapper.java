@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
 
-    public List<Integer> isUserExist(String accountID);
+    public Integer isUserExist(String accountID);
 
     public int updateUserInfo(@Param("accountID") String accountID, @Param("nickName") String nickName,
                     @Param("iconURL") String iconURL);

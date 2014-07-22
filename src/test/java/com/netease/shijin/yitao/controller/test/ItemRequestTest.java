@@ -7,14 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.netease.shijin.yitao.bean.BaseRequestBean;
 import com.netease.shijin.yitao.bean.ItemDetailBean;
 import com.netease.shijin.yitao.bean.QueryRequestBean;
+import com.netease.shijin.yitao.tool.HttpClientUtil;
 
-public class ItemRequestTest extends HttpRequestSender{
+public class ItemRequestTest extends HttpRequestSender {
     private static final String APPLICATION_JSON = "application/json";
     private static final String APPLICATION_XWWW = "application/x-www-form-urlencoded";
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
@@ -90,7 +92,7 @@ public class ItemRequestTest extends HttpRequestSender{
         String url = "http://localhost:8080/yitao/item/myitem?userID=35feae32d80f498899156323231a22b1&page=1&count=10";
         getRequest(url);
     }
-    
+
     public void offShelveTest() {
         String url = "http://localhost:8080/item/offshelve";
         Map<String, String> param = new HashMap<String, String>();
@@ -114,17 +116,42 @@ public class ItemRequestTest extends HttpRequestSender{
 //        String paramStr = "userID=35feae32d80f498899156323231a22b1&itemID=1e26bbc6734c40bd9494909b311095da";
 //        postRequest(url, paramStr, APPLICATION_XWWW);
     }
-    
-    public void fileUploadTest(){
+
+    public void fileUploadTest() {
         String url = "";
-        
+
     }
-    
+
     public void searchItem() {
         String url = "http://10.242.65.171:8080/search?keyword=dsad&page=1&count=10";
         getRequest(url);
     }
-    
+
+    public String getItemAddress(double positionX, double positionY) {
+        String url = "http://api.map.baidu.com/geocoder/v2/?ak=9db2734176e42df17710beca40cca88c&location=" + positionY + ","
+                        + positionX + "&output=json&pois=0";
+//        String url = "http://api.map.baidu.com/geocoder?location=" + positionY + "," + positionX
+//                        + "&output=json&key=9db2734176e42df17710beca40cca88c";
+        String resultJson = HttpClientUtil.sendGetRequest(url);
+        ObjectMapper mapper = new ObjectMapper();
+        String itemAddress = "";
+        try {
+            Map map = mapper.readValue(resultJson, Map.class);
+            itemAddress = (String) ((Map) map.get("result")).get("formatted_address");
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(itemAddress);
+        return itemAddress;
+    }
+
     public static void main(String[] args) {
         ItemRequestTest test = new ItemRequestTest();
 //        test.queryForItem();
@@ -132,7 +159,8 @@ public class ItemRequestTest extends HttpRequestSender{
 //        test.addItemTest();
 //        test.getMyItemTest();
 //        test.offShelveTest();
-        test.searchItem();
+//        test.searchItem();
+        test.getItemAddress(116.322987, 39.983424);
     }
 
 }

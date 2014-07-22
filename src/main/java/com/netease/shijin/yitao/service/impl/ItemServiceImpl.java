@@ -1,5 +1,6 @@
 package com.netease.shijin.yitao.service.impl;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,7 @@ import com.netease.shijin.yitao.bean.QueryRequestBean;
 import com.netease.shijin.yitao.dao.ItemDao;
 import com.netease.shijin.yitao.service.ItemService;
 import com.netease.shijin.yitao.tool.DistanceUtil;
+import com.netease.shijin.yitao.tool.HttpClientUtil;
 import com.netease.shijin.yitao.tool.PageUtil;
 import com.netease.shijin.yitao.tool.UUIDUtil;
 
@@ -66,18 +71,18 @@ public class ItemServiceImpl implements ItemService {
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>(list.size());
         for (ItemBean item : list) {
             Map<String, Object> map = new HashMap<String, Object>();
-            //距离处理
+            // 距离处理
             double distance = DistanceUtil.getDistance(item.getPositionX(), item.getPositionY(), queryRequest.getPositionX(),
                                                        queryRequest.getPositionY());
             if (distance <= distanceLimit) {
                 map.put("item", item);
                 map.put("distance", distance);
             }
-            //图片选择第一张返回
+            // 图片选择第一张返回
             String imgURL = item.getImgURL();
             imgURL = imgURL.split(",")[0];
             item.setImgURL(imgURL);
-            //时间处理
+            // 时间处理
 //            item.setPublishTime(item.getPublishTime()/1000);
             result.add(map);
         }
@@ -113,10 +118,10 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public boolean addItem(ItemDetailBean itemDetail) {
-        //验证
+        // 验证
         String itemID = UUIDUtil.getUUID();
         itemDetail.setItemID(itemID);
-        //时间格式化，只保存日期，不保存时间
+        // 时间格式化，只保存日期，不保存时间
         Timestamp publishTime = itemDetail.getPublishTime();
         Timestamp expiredTime = itemDetail.getExpiredTime();
         publishTime.setHours(0);
@@ -125,16 +130,33 @@ public class ItemServiceImpl implements ItemService {
         expiredTime.setHours(0);
         expiredTime.setMinutes(0);
         expiredTime.setSeconds(0);
-        //图片url存储形式
+//        图片url处理
+//        String domain = imgServer + request.getContextPath() + "/image/";
+//        String imgIDStr = itemDetail.getImgURL();
+//        String[] imgIDs = imgIDStr.split(",");
+//        String imgURLs = "";
+//        for (int i = 0; i < imgIDs.length - 1; i++) {
+//            imgURLs += (domain + imgIDs[i] + ",");
+//        }
+//        itemDetail.setImgURL(imgURLs);
+        // 地址处理，通过百度地图获取对应经纬度的地址信息
+        String itemAddress = getItemAddress(itemDetail.getPositionX(), itemDetail.getPositionY() );
+        itemDetail.setItemAddress(itemAddress);
         boolean result = itemDao.addItem(itemDetail);
         return result;
     }
 
     @Override
     public List<ItemBean> queryMyItem(String userID, int page, int count) {
-        //TODO 验证
-        int start = (page - 1)*count;
+        // TODO 验证
+        int start = (page - 1) * count;
         List<ItemBean> list = itemDao.getMyItem(userID, start, count);
+        for(ItemBean item : list) {
+         // 图片选择第一张返回
+            String imgURL = item.getImgURL();
+            imgURL = imgURL.split(",")[0];
+            item.setImgURL(imgURL);
+        }
         return list;
     }
 
@@ -142,6 +164,28 @@ public class ItemServiceImpl implements ItemService {
     public boolean offShelve(String userID, String itemID) {
         itemDao.offShelve(userID, itemID);
         return false;
+    }
+
+    public String getItemAddress(double positionX, double positionY) {
+        String url = "http://api.map.baidu.com/geocoder/v2/?ak=9db2734176e42df17710beca40cca88c&location=" + positionY + ","
+                        + positionX + "&output=json&pois=0";
+        String resultJson = HttpClientUtil.sendGetRequest(url);
+        ObjectMapper mapper = new ObjectMapper();
+        String itemAddress = "";
+        try {
+            Map map = mapper.readValue(resultJson, Map.class);
+            itemAddress = (String)((Map)map.get("result")).get("formatted_address");
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return itemAddress;
     }
 
 }

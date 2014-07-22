@@ -19,8 +19,8 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean isUserExist(String accountID) {
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        List<Integer> result = mapper.isUserExist(accountID);
-        return result.size() != 0 ? true : false;
+        Integer result = mapper.isUserExist(accountID);
+        return result != null ? true : false;
     }
 
     @Override

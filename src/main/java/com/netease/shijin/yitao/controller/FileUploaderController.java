@@ -20,6 +20,8 @@ import com.netease.shijin.yitao.bean.ResponseBean;
 @Controller
 @RequestMapping("/item/uploadImg")
 public class FileUploaderController {
+    
+    private String imgServer = "http://10.242.65.171:8080";
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody ResponseBean processUpload(@RequestParam MultipartFile file, HttpServletRequest request) throws IOException {
         ResponseBean response = new ResponseBean();
@@ -36,10 +38,11 @@ public class FileUploaderController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);  
+//        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);
+        String imgURL = imgServer + request.getContextPath() + "/image" + fileName;
         response.setCode(200);
         Map<String, String> data = new HashMap<String, String>();
-        data.put("picid", fileName);
+        data.put("picid", imgURL);
         response.setData(data);
         return response;
     }

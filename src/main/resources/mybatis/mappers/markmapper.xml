@@ -15,7 +15,7 @@
 		<result column="positiony" property="positionY" />
 	</resultMap>
 	<select id="isMarked" resultType="java.lang.Integer">
-		select id from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
+		select 1 from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
 	</select>
 
 	<insert id="addMarkRecord">
