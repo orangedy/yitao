@@ -3,6 +3,8 @@ package com.netease.shijin.yitao.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.ItemDetailBean;
 import com.netease.shijin.yitao.bean.QueryRequestBean;

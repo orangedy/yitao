@@ -7,15 +7,15 @@
 		<result column="name" property="itemName" />
 		<result column="description" property="itemDescription" />
 		<result column="price" property="itemPrice" />
-		<result column="degree" property="degree" />
-		<result column="category" property="category" />
+		<result column="degree" property="itemDegree" />
+		<result column="category" property="itemCategory" />
 		<result column="pictureurl" property="imgURL" />
 		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
 		<result column="positiony" property="positionY" />
 	</resultMap>
-	<select id="isMarked">
-		select 1 from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
+	<select id="isMarked" resultType="java.lang.Integer">
+		select id from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
 	</select>
 
 	<insert id="addMarkRecord">

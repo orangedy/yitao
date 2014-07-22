@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,12 +66,19 @@ public class ItemServiceImpl implements ItemService {
         List<Map<String, Object>> result = new ArrayList<Map<String, Object>>(list.size());
         for (ItemBean item : list) {
             Map<String, Object> map = new HashMap<String, Object>();
+            //距离处理
             double distance = DistanceUtil.getDistance(item.getPositionX(), item.getPositionY(), queryRequest.getPositionX(),
                                                        queryRequest.getPositionY());
             if (distance <= distanceLimit) {
                 map.put("item", item);
                 map.put("distance", distance);
             }
+            //图片选择第一张返回
+            String imgURL = item.getImgURL();
+            imgURL = imgURL.split(",")[0];
+            item.setImgURL(imgURL);
+            //时间处理
+//            item.setPublishTime(item.getPublishTime()/1000);
             result.add(map);
         }
         sort(result, queryRequest);
@@ -107,6 +116,16 @@ public class ItemServiceImpl implements ItemService {
         //验证
         String itemID = UUIDUtil.getUUID();
         itemDetail.setItemID(itemID);
+        //时间格式化，只保存日期，不保存时间
+        Timestamp publishTime = itemDetail.getPublishTime();
+        Timestamp expiredTime = itemDetail.getExpiredTime();
+        publishTime.setHours(0);
+        publishTime.setMinutes(0);
+        publishTime.setSeconds(0);
+        expiredTime.setHours(0);
+        expiredTime.setMinutes(0);
+        expiredTime.setSeconds(0);
+        //图片url存储形式
         boolean result = itemDao.addItem(itemDetail);
         return result;
     }

@@ -20,7 +20,7 @@ public class MarkRecordDaoImpl implements MarkRecordDao {
     @Override
     public boolean isMarked(String userID, String itemID) {
         MarkMapper mapper = sqlSession.getMapper(MarkMapper.class);
-        return mapper.isMarked(userID, itemID).size() == 0 ? false : true;
+        return mapper.isMarked(userID, itemID) == null ? false : true;
     }
 
     @Override

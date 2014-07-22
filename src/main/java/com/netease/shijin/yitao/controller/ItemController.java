@@ -1,8 +1,11 @@
 package com.netease.shijin.yitao.controller;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +27,10 @@ import com.netease.shijin.yitao.service.MarkService;
 @RequestMapping("/item")
 public class ItemController {
 
+    private String imgServer = "http://10.242.65.171:8080";
     @Autowired
     private ItemService itemService;
+    @Autowired
     private MarkService markService;
 
     @RequestMapping(value = "/itemlist", method = RequestMethod.POST, headers = {"content-type=application/json"})
@@ -44,10 +49,10 @@ public class ItemController {
         ResponseBean response = new ResponseBean();
         Map<String, Object> data = new HashMap<String, Object>();
         ItemDetailBean itemDetail = itemService.getItemDetail(itemID);
-        data.put("detail", itemDetail);
+        data.put("item", itemDetail);
         if (userID != null) {
             boolean isMarked = markService.isMarked(userID, itemID);
-            data.put("isMarked", isMarked);
+            data.put("isMarked", isMarked == true ? 1 : 0);
         }
         response.setData(data);
         return response;
@@ -55,8 +60,33 @@ public class ItemController {
 
     @RequestMapping(value = "/additem", method = RequestMethod.POST, headers = {"content-type=application/json"})
     public @ResponseBody
-    ResponseBean addItem(@RequestBody ItemDetailBean itemDetail) {
+    ResponseBean addItem(@RequestBody Map param, HttpServletRequest request) {
         ResponseBean response = new ResponseBean();
+        ItemDetailBean itemDetail = new ItemDetailBean();
+        itemDetail.setExpiredTime(new Timestamp((long) param.get("expiredTime")));
+        itemDetail.setPublishTime(new Timestamp((long) param.get("publishTime")));
+        itemDetail.setItemAddress((String) param.get("itemAddress"));
+        itemDetail.setItemCategory(Integer.valueOf((String) param.get("itemCategory")));
+        itemDetail.setItemDegree(Integer.valueOf((String) param.get("itemDegree")));
+        itemDetail.setItemName((String) param.get("itemName"));
+        itemDetail.setItemDescription((String) param.get("itemDescription"));
+        itemDetail.setItemPrice(Double.valueOf((String) param.get("itemPrice")));
+        itemDetail.setImgURL((String) param.get("imgURL"));
+        itemDetail.setPositionX(Double.valueOf((String) param.get("positionX")));
+        itemDetail.setPositionY(Double.valueOf((String) param.get("positionY")));
+        itemDetail.setSellerID((String) param.get("sellerID"));
+        itemDetail.setSellerName((String) param.get("sellerName"));
+        itemDetail.setSellerTel((String) param.get("sellerTel"));
+//        itemDetail.set
+        // 图片url处理
+        String domain = imgServer + request.getContextPath() + "/image/";
+        String imgIDStr = itemDetail.getImgURL();
+        String[] imgIDs = imgIDStr.split(",");
+        String imgURLs = "";
+        for (String imgID : imgIDs) {
+            imgURLs += (domain + imgID + ",");
+        }
+        itemDetail.setImgURL(imgURLs);
         boolean result = itemService.addItem(itemDetail);
         response.setCode(200);
         response.setData(result);

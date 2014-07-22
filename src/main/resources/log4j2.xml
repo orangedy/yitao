@@ -8,18 +8,23 @@
 		<RollingFile name="RollingFile" fileName="logs/app.log"
 			filePattern="logs/$${date:yyyy-MM}/app-%d{yyyy-MM-dd}-%i.log.gz">
 			<PatternLayout>
-				<Pattern>%d %p %c{2.} [%t] %m%n</Pattern>
+				<Pattern>%d %p %c{5.} [%t] %m%n</Pattern>
 			</PatternLayout>
 			<Policies>
-				<OnStartupTriggeringPolicy />
-				<!-- <TimeBasedTriggeringPolicy />
-				<SizeBasedTriggeringPolicy size="250 MB" /> -->
+				<!-- <OnStartupTriggeringPolicy /> -->
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="250 MB" />
 			</Policies>
 			<DefaultRolloverStrategy max="20"/>
 		</RollingFile>
 	</appenders>
 	<loggers>
 		<logger name="org.apache.http" level="debug">
+		</logger>
+		<logger name="org.apache.ibatis" level="debug">
+		</logger>
+		<logger name="com.netease.shijin.yitao.mapper" level="debug"></logger>
+		<logger name="java.sql" level="debug">
 		</logger>
 		<!-- <logger name="org.apache.http.wire" level="error">
 		</logger> -->

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,10 +27,14 @@ public class UserController extends BaseController {
      * @param iconURL 用户第三方头像的链接
      * @return
      */
-    @RequestMapping("/createAccount")
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseBean login(@RequestParam String nickName, @RequestParam String accountID, @RequestParam String iconURL) {
+    ResponseBean login(@RequestBody Map<String, String> param/*@RequestParam String nickName, @RequestParam String accountID, @RequestParam String iconURL*/) {
         ResponseBean response = new ResponseBean();
+        String accountID = param.get("accountID");
+        String nickName = param.get("nickName");
+        String iconURL = param.get("iconURL");
+        
         String userID = userService.login(accountID, nickName, iconURL);
         response.setCode(200);
         Map<String, String> result = new HashMap<String, String>();

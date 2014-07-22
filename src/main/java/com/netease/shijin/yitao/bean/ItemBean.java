@@ -16,11 +16,11 @@ public class ItemBean {
     
     private String imgURL;
     
-    private int itemPrice;
+    private double itemPrice;
     
-    private int degree;
+    private int itemDegree;
     
-    private int category;
+    private int itemCategory;
     
     private Timestamp publishTime;
     

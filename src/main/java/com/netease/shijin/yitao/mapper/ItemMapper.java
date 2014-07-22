@@ -20,4 +20,6 @@ public interface ItemMapper {
 
     int offShelve(@Param("userID") String userID, @Param("itemID") String itemID);
 
+    List<ItemBean> searchItem(@Param("keyword")String keyword, @Param("start")int start, @Param("count")int count);
+
 }

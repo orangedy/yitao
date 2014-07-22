@@ -20,7 +20,7 @@ public class ItemRequestTest extends HttpRequestSender{
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
 
     public void queryForItem() {
-        String url = "http://localhost:8080/yitao/item/itemlist";
+        String url = "http://localhost:8080/item/itemlist";
         QueryRequestBean query = new QueryRequestBean();
         query.setCategoryType(0);
         query.setCount(10);
@@ -53,20 +53,20 @@ public class ItemRequestTest extends HttpRequestSender{
     }
 
     public void addItemTest() {
-        String url = "http://localhost:8080/yitao/item/additem";
+        String url = "http://localhost:8080/item/additem";
         ItemDetailBean item = new ItemDetailBean();
         item.setItemName("hhh");
         item.setItemDescription("hhhhhhhhhhh");
         item.setItemPrice(100);
-        item.setCategory(1);
-        item.setDegree(8);
-        item.setImgURL("xxx,yyy");
+        item.setItemCategory(1);
+        item.setItemDegree(8);
+        item.setImgURL("xxx,yyy,zzz");
         item.setSellerID("35feae32d80f498899156323231a22b1");
         item.setSellerName("dy");
         item.setSellerTel("135xxxxxxxx");
         item.setPositionX(120);
         item.setPositionY(40);
-        item.setAddress("xxx");
+        item.setItemAddress("xxx");
         item.setPublishTime(new Timestamp(new Date().getTime()));
         item.setExpiredTime(new Timestamp(new Date().getTime() + 7 * 24 * 3600 * 1000));
         ObjectMapper mapper = new ObjectMapper();
@@ -92,7 +92,7 @@ public class ItemRequestTest extends HttpRequestSender{
     }
     
     public void offShelveTest() {
-        String url = "http://localhost:8080/yitao/item/offshelve";
+        String url = "http://localhost:8080/item/offshelve";
         Map<String, String> param = new HashMap<String, String>();
         param.put("userID", "35feae32d80f498899156323231a22b1");
         param.put("itemID", "1e26bbc6734c40bd9494909b311095da");
@@ -115,6 +115,16 @@ public class ItemRequestTest extends HttpRequestSender{
 //        postRequest(url, paramStr, APPLICATION_XWWW);
     }
     
+    public void fileUploadTest(){
+        String url = "";
+        
+    }
+    
+    public void searchItem() {
+        String url = "http://10.242.65.171:8080/search?keyword=dsad&page=1&count=10";
+        getRequest(url);
+    }
+    
     public static void main(String[] args) {
         ItemRequestTest test = new ItemRequestTest();
 //        test.queryForItem();
@@ -122,6 +132,7 @@ public class ItemRequestTest extends HttpRequestSender{
 //        test.addItemTest();
 //        test.getMyItemTest();
 //        test.offShelveTest();
+        test.searchItem();
     }
 
 }

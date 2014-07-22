@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ItemDetailBean extends ItemBean{
 
-    private String address;
+    private String itemAddress;
     
     private String sellerID;
     

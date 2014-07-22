@@ -59,4 +59,10 @@ public class ItemDaoImpl implements ItemDao {
         }
     }
 
+    @Override
+    public List<ItemBean> searchItem(String keyword, int start, int count) {
+        ItemMapper mapper = sqlSession.getMapper(ItemMapper.class);
+        return mapper.searchItem(keyword, start, count);
+    }
+
 }

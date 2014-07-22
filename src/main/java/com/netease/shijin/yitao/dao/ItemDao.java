@@ -18,4 +18,6 @@ public interface ItemDao {
 
     boolean offShelve(String userID, String itemID);
 
+    List<ItemBean> searchItem(String keyword, int start, int count);
+
 }

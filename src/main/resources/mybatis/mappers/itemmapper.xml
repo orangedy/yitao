@@ -7,8 +7,8 @@
 		<result column="name" property="itemName" />
 		<result column="description" property="itemDescription" />
 		<result column="price" property="itemPrice" />
-		<result column="degree" property="degree" />
-		<result column="category" property="category" />
+		<result column="degree" property="itemDegree" />
+		<result column="category" property="itemCategory" />
 		<result column="pictureurl" property="imgURL" />
 		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
@@ -20,13 +20,13 @@
 		<result column="name" property="itemName" />
 		<result column="description" property="itemDescription" />
 		<result column="price" property="itemPrice" />
-		<result column="degree" property="degree" />
-		<result column="category" property="category" />
+		<result column="degree" property="itemDegree" />
+		<result column="category" property="itemCategory" />
 		<result column="pictureurl" property="imgURL" />
 		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
 		<result column="positiony" property="positionY" />
-		<result column="address" property="address" />
+		<result column="address" property="itemAddress" />
 		<result column="sellerid" property="sellerID" />
 		<result column="sellername" property="sellerName" />
 		<result column="sellerphone" property="sellerTel" />
@@ -60,6 +60,7 @@
 				]]>
 			</when>
 		</choose>
+		status = 0 and
 		positionx between #{longiMin} and #{longiMax} and positiony between #{latiMin} and #{latiMax}
 		order by publishtime desc
 	</select>
@@ -74,7 +75,7 @@
 		insert into item (itemid, name, description, price, degree, category, positionx, positiony, address,
 		pictureurl, sellerid, sellername, sellerphone, publishtime, expiredtime) values(#{itemID}, #{itemName},
 		#{itemDescription},
-		#{itemPrice}, #{degree}, #{category}, #{positionX}, #{positionY}, #{address},
+		#{itemPrice}, #{itemDegree}, #{itemCategory}, #{positionX}, #{positionY}, #{itemAddress},
 		#{imgURL}, #{sellerID}, #{sellerName},
 		#{sellerTel}, #{publishTime}, #{expiredTime})
 	</insert>
@@ -88,4 +89,9 @@
 	<update id="offShelve">
 		update item set status=1 where itemid=#{itemID} and sellerid=#{userID}
 	</update>
+	
+	<select id="searchItem" resultMap="item">
+		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony
+		from item where name like "%"#{keyword}"%" order by publishtime desc limit #{start}, #{count}
+	</select>
 </mapper>
