@@ -14,9 +14,9 @@ public class UserRequestTest extends HttpRequestSender {
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
 
     public void loginTest() {
-        String url = "http://10.242.65.171:8080/user/login";
+        String url = "http://223.252.196.241:8080/user/login";
         Map<String, String> param = new HashMap<String, String>();
-        param.put("nickName", "dy");
+        param.put("nickName", "丁勇");
         param.put("accountID", "xxxxxxxxxxxxxxxxxx");
         param.put("iconURL", "http://www.baidu.com");
         ObjectMapper mapper = new ObjectMapper();

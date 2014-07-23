@@ -11,4 +11,7 @@ http://www.springframework.org/schema/mvc http://www.springframework.org/schema/
 	<context:component-scan base-package="com.netease.shijin.yitao.controller" />
 	<context:component-scan base-package="com.netease.shijin.yitao.dao" />
 	<context:component-scan base-package="com.netease.shijin.yitao.service" />
+	<!-- <bean id = "fileupload" class="com.netease.shijin.yitao.controller.FileUploaderController">
+		<property name="imgServer" value="http://10.242.65.171:8080"></property>
+	</bean> -->
 </beans>

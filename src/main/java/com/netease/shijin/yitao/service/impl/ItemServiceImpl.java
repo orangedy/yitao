@@ -23,6 +23,7 @@ import com.netease.shijin.yitao.bean.ItemDetailBean;
 import com.netease.shijin.yitao.bean.QueryBean;
 import com.netease.shijin.yitao.bean.QueryRequestBean;
 import com.netease.shijin.yitao.dao.ItemDao;
+import com.netease.shijin.yitao.exception.ParameterException;
 import com.netease.shijin.yitao.service.ItemService;
 import com.netease.shijin.yitao.tool.DistanceUtil;
 import com.netease.shijin.yitao.tool.HttpClientUtil;
@@ -36,25 +37,33 @@ public class ItemServiceImpl implements ItemService {
     private ItemDao itemDao;
 
     @Override
-    public List<Map<String, Object>> queryItem(QueryRequestBean queryRequest) {
+    public List<Map<String, Object>> queryItem(QueryRequestBean queryRequest) throws Exception {
+        // 校验
+        if (queryRequest.getPositionX() < 0 || queryRequest.getPositionX() > 180 || queryRequest.getPositionY() < 0
+                        || queryRequest.getPositionY() > 90) {
+            throw new ParameterException();
+        }
+        if (queryRequest.getPage() <= 0) {
+            throw new ParameterException();
+        }
         // 距离处理
         int distanceType = queryRequest.getDistanceType();
-        int distanceLimit = 0;
+        int distanceLimit = 5000;
         switch (distanceType) {
             case 0:
-                distanceLimit = 1000;
+                distanceLimit = 5000;
                 break;
             case 1:
-                distanceLimit = 2000;
+                distanceLimit = 1000;
                 break;
             case 2:
-                distanceLimit = 5000;
+                distanceLimit = 3000;
                 break;
             case 3:
                 distanceLimit = 10000;
                 break;
             case 4:
-                distanceLimit = 20000;
+                distanceLimit = 40000;
                 break;
         }
         double longi = DistanceUtil.getLongi(queryRequest.getPositionX(), queryRequest.getPositionY(), distanceLimit);
@@ -74,17 +83,18 @@ public class ItemServiceImpl implements ItemService {
             // 距离处理
             double distance = DistanceUtil.getDistance(item.getPositionX(), item.getPositionY(), queryRequest.getPositionX(),
                                                        queryRequest.getPositionY());
+            // 如果距离小于查询范围，则返回该商品，否则丢弃
             if (distance <= distanceLimit) {
                 map.put("item", item);
                 map.put("distance", distance);
-            }
-            // 图片选择第一张返回
-            String imgURL = item.getImgURL();
-            imgURL = imgURL.split(",")[0];
-            item.setImgURL(imgURL);
-            // 时间处理
+                // 图片选择第一张返回
+                String imgURL = item.getImgURL();
+                imgURL = imgURL.split(",")[0];
+                item.setImgURL(imgURL);
+                // 时间处理
 //            item.setPublishTime(item.getPublishTime()/1000);
-            result.add(map);
+                result.add(map);
+            }
         }
         sort(result, queryRequest);
         result = page(result, queryRequest.getPage(), queryRequest.getCount());
@@ -124,9 +134,9 @@ public class ItemServiceImpl implements ItemService {
         // 时间格式化，只保存日期，不保存时间
         Timestamp publishTime = itemDetail.getPublishTime();
         Timestamp expiredTime = itemDetail.getExpiredTime();
-        publishTime.setHours(0);
-        publishTime.setMinutes(0);
-        publishTime.setSeconds(0);
+//        publishTime.setHours(0);
+//        publishTime.setMinutes(0);
+//        publishTime.setSeconds(0);
         expiredTime.setHours(0);
         expiredTime.setMinutes(0);
         expiredTime.setSeconds(0);
@@ -140,7 +150,7 @@ public class ItemServiceImpl implements ItemService {
 //        }
 //        itemDetail.setImgURL(imgURLs);
         // 地址处理，通过百度地图获取对应经纬度的地址信息
-        String itemAddress = getItemAddress(itemDetail.getPositionX(), itemDetail.getPositionY() );
+        String itemAddress = getItemAddress(itemDetail.getPositionX(), itemDetail.getPositionY());
         itemDetail.setItemAddress(itemAddress);
         boolean result = itemDao.addItem(itemDetail);
         return result;
@@ -151,8 +161,8 @@ public class ItemServiceImpl implements ItemService {
         // TODO 验证
         int start = (page - 1) * count;
         List<ItemBean> list = itemDao.getMyItem(userID, start, count);
-        for(ItemBean item : list) {
-         // 图片选择第一张返回
+        for (ItemBean item : list) {
+            // 图片选择第一张返回
             String imgURL = item.getImgURL();
             imgURL = imgURL.split(",")[0];
             item.setImgURL(imgURL);
@@ -162,8 +172,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public boolean offShelve(String userID, String itemID) {
-        itemDao.offShelve(userID, itemID);
-        return false;
+        return itemDao.offShelve(userID, itemID);
     }
 
     public String getItemAddress(double positionX, double positionY) {
@@ -174,7 +183,7 @@ public class ItemServiceImpl implements ItemService {
         String itemAddress = "";
         try {
             Map map = mapper.readValue(resultJson, Map.class);
-            itemAddress = (String)((Map)map.get("result")).get("formatted_address");
+            itemAddress = (String) ((Map) map.get("result")).get("formatted_address");
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

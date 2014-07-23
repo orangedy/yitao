@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.netease.shijin.yitao.bean.BaseRequestBean;
 import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.ResponseBean;
+import com.netease.shijin.yitao.exception.ParameterException;
 import com.netease.shijin.yitao.service.MarkService;
 
 @Controller
@@ -24,39 +25,51 @@ public class MarkController {
 
     @Autowired
     private MarkService markService;
-    
+
     @RequestMapping(value = "/addmark", method = RequestMethod.POST)
-    public @ResponseBody ResponseBean markItem(@RequestBody BaseRequestBean requestParam){
+    public @ResponseBody
+    ResponseBean markItem(@RequestBody BaseRequestBean requestParam) throws Exception {
         ResponseBean response = new ResponseBean();
-        //TODO mark item
+        // TODO mark item
         String userID = requestParam.getUserID();
         String itemID = requestParam.getItemID();
+        if (userID == null || userID == "" || itemID == null || itemID == "") {
+            throw new ParameterException();
+        }
         boolean result = markService.addMark(userID, itemID);
         response.setCode(200);
         response.setData(result);
         return response;
     }
-    
+
     @RequestMapping(value = "/deletemark", method = RequestMethod.POST)
-    public @ResponseBody ResponseBean deleteMarkedItem(@RequestBody BaseRequestBean requestParam){
+    public @ResponseBody
+    ResponseBean deleteMarkedItem(@RequestBody BaseRequestBean requestParam) throws Exception {
         ResponseBean response = new ResponseBean();
-        //TODO delete marked item
+        // TODO delete marked item
         String userID = requestParam.getUserID();
         String itemID = requestParam.getItemID();
+        if (userID == null || userID == "" || itemID == null || itemID == "") {
+            throw new ParameterException();
+        }
         boolean result = markService.deleteMarkedItem(userID, itemID);
         response.setCode(200);
         response.setData(result);
         return response;
     }
-    
+
     @RequestMapping(value = "/marklist", method = RequestMethod.GET)
-    public @ResponseBody ResponseBean getMarkItemList(@RequestParam String userID, @RequestParam int page, @RequestParam int count){
+    public @ResponseBody
+    ResponseBean getMarkItemList(@RequestParam String userID, @RequestParam int page, @RequestParam int count) throws Exception {
         ResponseBean response = new ResponseBean();
-        //TODO
+        // TODO 校验
+        if (userID == null || userID == "" || page <= 0 || count < 0) {
+            throw new ParameterException();
+        }
         List<ItemBean> result = markService.getMarkList(userID, page, count);
         response.setCode(200);
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        for(ItemBean item : result) {
+        for (ItemBean item : result) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("item", item);
             items.add(map);

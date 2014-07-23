@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netease.shijin.yitao.bean.ResponseBean;
+import com.netease.shijin.yitao.exception.ParameterException;
 import com.netease.shijin.yitao.service.UserService;
 
 @Controller
@@ -26,15 +27,18 @@ public class UserController extends BaseController {
      * @param accountID 用户第三方账号的ID，唯一的标识
      * @param iconURL 用户第三方头像的链接
      * @return
+     * @throws Exception 
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public @ResponseBody
-    ResponseBean login(@RequestBody Map<String, String> param/*@RequestParam String nickName, @RequestParam String accountID, @RequestParam String iconURL*/) {
+    ResponseBean login(@RequestBody Map<String, String> param) throws Exception {
         ResponseBean response = new ResponseBean();
         String accountID = param.get("accountID");
         String nickName = param.get("nickName");
         String iconURL = param.get("iconURL");
-        
+        if(accountID == null || accountID == "" || nickName == null || nickName == ""){
+            throw new ParameterException();
+        }
         String userID = userService.login(accountID, nickName, iconURL);
         response.setCode(200);
         Map<String, String> result = new HashMap<String, String>();
@@ -63,6 +67,7 @@ public class UserController extends BaseController {
      * @param userID
      * @return
      */
+    @RequestMapping(value = "/logout")
     public @ResponseBody
     ResponseBean logout(@RequestParam long userID) {
         ResponseBean response = new ResponseBean();

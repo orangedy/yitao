@@ -13,6 +13,7 @@
 		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
 		<result column="positiony" property="positionY" />
+		<result column="status" property="itemState" />
 	</resultMap>
 
 	<resultMap type="com.netease.shijin.yitao.bean.ItemDetailBean" id="itemDetail">
@@ -35,7 +36,7 @@
 	</resultMap>
 
 	<select id="queryItem" resultMap="item">
-		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony from item where
+		select itemid,name,description,price,degree,category,pictureurl,publishtime,positionx,positiony from item where
 		<if test="categoryType != 0">
 			category = #{categoryType} and
 		</if>
@@ -81,7 +82,7 @@
 	</insert>
 
 	<select id="getMyItem" resultMap="item">
-		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony
+		select itemid,name,description,price,degree,category,pictureurl,publishtime,positionx,positiony,status
 		from item where
 		sellerid=#{userID} order by publishtime desc limit #{start}, #{count}
 	</select>
@@ -91,7 +92,7 @@
 	</update>
 	
 	<select id="searchItem" resultMap="item">
-		select itemid,name,description,price,degree,pictureurl,publishtime,positionx,positiony
-		from item where name like "%"#{keyword}"%" order by publishtime desc limit #{start}, #{count}
+		select itemid,name,description,price,degree,category,pictureurl,publishtime,positionx,positiony
+		from item status=0 and where name like "%"#{keyword}"%" order by publishtime desc limit #{start}, #{count}
 	</select>
 </mapper>

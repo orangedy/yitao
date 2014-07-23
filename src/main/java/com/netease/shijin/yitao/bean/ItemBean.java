@@ -27,4 +27,6 @@ public class ItemBean {
     private double positionX;
     
     private double positionY;
+    
+    private int itemState;
 }

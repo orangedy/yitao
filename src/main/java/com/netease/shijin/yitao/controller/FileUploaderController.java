@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.Setter;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +24,8 @@ import com.netease.shijin.yitao.bean.ResponseBean;
 @RequestMapping("/item/uploadImg")
 public class FileUploaderController {
     
-    private String imgServer = "http://10.242.65.171:8080";
+    @Autowired@Setter
+    private String imgServer = "";
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody ResponseBean processUpload(@RequestParam MultipartFile file, HttpServletRequest request) throws IOException {
         ResponseBean response = new ResponseBean();
@@ -39,7 +43,7 @@ public class FileUploaderController {
             e.printStackTrace();
         }
 //        model.addAttribute("fileUrl", request.getContextPath()+"/upload/"+fileName);
-        String imgURL = imgServer + request.getContextPath() + "/image" + fileName;
+        String imgURL = imgServer + request.getContextPath() + "/image/" + fileName;
         response.setCode(200);
         Map<String, String> data = new HashMap<String, String>();
         data.put("picid", imgURL);

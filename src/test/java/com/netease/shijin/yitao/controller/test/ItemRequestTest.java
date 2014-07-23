@@ -22,6 +22,7 @@ public class ItemRequestTest extends HttpRequestSender {
     private static final String CONTENT_TYPE_TEXT_JSON = "text/json";
 
     public void queryForItem() {
+//        String url = "http://223.252.196.241:8080/item/itemlist";
         String url = "http://localhost:8080/item/itemlist";
         QueryRequestBean query = new QueryRequestBean();
         query.setCategoryType(0);
@@ -29,7 +30,7 @@ public class ItemRequestTest extends HttpRequestSender {
         query.setPage(1);
         query.setDegreeType(0);
         query.setDistanceType(4);
-        query.setPositionX(120);
+        query.setPositionX(-120);
         query.setPositionY(50);
         query.setSort(0);
         ObjectMapper mapper = new ObjectMapper();
@@ -55,19 +56,19 @@ public class ItemRequestTest extends HttpRequestSender {
     }
 
     public void addItemTest() {
-        String url = "http://localhost:8080/item/additem";
+        String url = "http://223.252.196.241:8080/item/additem";
         ItemDetailBean item = new ItemDetailBean();
-        item.setItemName("hhh");
-        item.setItemDescription("hhhhhhhhhhh");
-        item.setItemPrice(100);
+        item.setItemName("风味发酵乳");
+        item.setItemDescription("好吃的原味风味发酵乳，呵护健康。");
+        item.setItemPrice(3);
         item.setItemCategory(1);
         item.setItemDegree(8);
         item.setImgURL("xxx,yyy,zzz");
         item.setSellerID("35feae32d80f498899156323231a22b1");
-        item.setSellerName("dy");
+        item.setSellerName("丁勇");
         item.setSellerTel("135xxxxxxxx");
         item.setPositionX(120);
-        item.setPositionY(40);
+        item.setPositionY(30);
         item.setItemAddress("xxx");
         item.setPublishTime(new Timestamp(new Date().getTime()));
         item.setExpiredTime(new Timestamp(new Date().getTime() + 7 * 24 * 3600 * 1000));
@@ -154,13 +155,13 @@ public class ItemRequestTest extends HttpRequestSender {
 
     public static void main(String[] args) {
         ItemRequestTest test = new ItemRequestTest();
-//        test.queryForItem();
+        test.queryForItem();
 //        test.getItemDetailTest();
 //        test.addItemTest();
 //        test.getMyItemTest();
 //        test.offShelveTest();
 //        test.searchItem();
-        test.getItemAddress(116.322987, 39.983424);
+//        test.getItemAddress(116.322987, 39.983424);
     }
 
 }

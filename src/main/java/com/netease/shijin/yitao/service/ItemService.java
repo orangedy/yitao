@@ -11,7 +11,7 @@ import com.netease.shijin.yitao.bean.QueryRequestBean;
 
 public interface ItemService {
 
-    public List<Map<String, Object>> queryItem(QueryRequestBean query);
+    public List<Map<String, Object>> queryItem(QueryRequestBean query) throws Exception;
 
     public ItemDetailBean getItemDetail(String itemID);
 

@@ -29,5 +29,10 @@
 	<import resource="classpath:dao-config.xml" />
 	
 	<import resource="classpath:service-config.xml" />
+	
+	<bean id="imgServer" class="java.lang.String">
+		<constructor-arg value="http://10.242.65.171:8080">
+		</constructor-arg>
+	</bean>
 
 </beans>

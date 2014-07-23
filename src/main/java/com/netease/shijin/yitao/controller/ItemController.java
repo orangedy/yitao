@@ -21,6 +21,7 @@ import com.netease.shijin.yitao.bean.ItemBean;
 import com.netease.shijin.yitao.bean.ItemDetailBean;
 import com.netease.shijin.yitao.bean.QueryRequestBean;
 import com.netease.shijin.yitao.bean.ResponseBean;
+import com.netease.shijin.yitao.exception.ParameterException;
 import com.netease.shijin.yitao.service.ItemService;
 import com.netease.shijin.yitao.service.MarkService;
 
@@ -28,7 +29,6 @@ import com.netease.shijin.yitao.service.MarkService;
 @RequestMapping("/item")
 public class ItemController {
 
-    private String imgServer = "http://10.242.65.171:8080";
     @Autowired
     private ItemService itemService;
     @Autowired
@@ -36,7 +36,7 @@ public class ItemController {
 
     @RequestMapping(value = "/itemlist", method = RequestMethod.POST, headers = {"content-type=application/json"})
     public @ResponseBody
-    ResponseBean getItemList(@RequestBody QueryRequestBean query) {
+    ResponseBean getItemList(@RequestBody QueryRequestBean query) throws Exception {
         ResponseBean response = new ResponseBean();
         List<Map<String, Object>> result = itemService.queryItem(query);
         response.setCode(200);
@@ -46,7 +46,10 @@ public class ItemController {
 
     @RequestMapping(value = "/itemdetail", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseBean getItemDetail(@RequestParam(required = false) String userID, @RequestParam String itemID) {
+    ResponseBean getItemDetail(@RequestParam(required = false) String userID, @RequestParam String itemID) throws Exception {
+        if (itemID == null || itemID == "") {
+            throw new ParameterException();
+        }
         ResponseBean response = new ResponseBean();
         Map<String, Object> data = new HashMap<String, Object>();
         ItemDetailBean itemDetail = itemService.getItemDetail(itemID);
@@ -63,7 +66,7 @@ public class ItemController {
     public @ResponseBody
     ResponseBean addItem(@RequestBody Map param, HttpServletRequest request) {
         ResponseBean response = new ResponseBean();
-        //解析参数
+        // 解析参数
         ItemDetailBean itemDetail = new ItemDetailBean();
         itemDetail.setExpiredTime(new Timestamp((long) param.get("expiredTime")));
         itemDetail.setPublishTime(new Timestamp((long) param.get("publishTime")));
@@ -79,7 +82,7 @@ public class ItemController {
         itemDetail.setSellerID((String) param.get("sellerID"));
         itemDetail.setSellerName((String) param.get("sellerName"));
         itemDetail.setSellerTel((String) param.get("sellerTel"));
-       
+
         boolean result = itemService.addItem(itemDetail);
         response.setCode(200);
         response.setData(result);
@@ -88,11 +91,14 @@ public class ItemController {
 
     @RequestMapping(value = "/myitem", method = RequestMethod.GET)
     public @ResponseBody
-    ResponseBean getMyItem(@RequestParam String userID, @RequestParam int page, @RequestParam int count) {
+    ResponseBean getMyItem(@RequestParam String userID, @RequestParam int page, @RequestParam int count) throws Exception {
+        if (userID == null || userID == "" || page <= 0 || count < 0) {
+            throw new ParameterException();
+        }
         ResponseBean response = new ResponseBean();
         List<ItemBean> result = itemService.queryMyItem(userID, page, count);
         List<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-        for(ItemBean item : result) {
+        for (ItemBean item : result) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("item", item);
             items.add(map);
@@ -104,12 +110,17 @@ public class ItemController {
 
     @RequestMapping(value = "/offshelve", method = RequestMethod.POST, headers = {"content-type=application/json"})
     public @ResponseBody
-    ResponseBean offShelve(@RequestBody BaseRequestBean requestParam) {
+    ResponseBean offShelve(@RequestBody BaseRequestBean requestParam) throws Exception {
         ResponseBean response = new ResponseBean();
         // TODO
         String userID = requestParam.getUserID();
         String itemID = requestParam.getItemID();
+        if(userID == null || userID == "" || itemID == null || itemID == ""){
+            throw new ParameterException();
+        }
         boolean result = itemService.offShelve(userID, itemID);
+        response.setCode(200);
+        response.setData(result);
         return response;
     }
 }

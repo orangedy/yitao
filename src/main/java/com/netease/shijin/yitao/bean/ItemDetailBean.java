@@ -17,5 +17,5 @@ public class ItemDetailBean extends ItemBean{
     
     private Timestamp expiredTime;
     
-    private int itemState;
+//    private int itemState;
 }

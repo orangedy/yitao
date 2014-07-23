@@ -13,6 +13,7 @@
 		<result column="publishtime" property="publishTime" />
 		<result column="positionx" property="positionX" />
 		<result column="positiony" property="positionY" />
+		<result column="status" property="itemState" />
 	</resultMap>
 	<select id="isMarked" resultType="java.lang.Integer">
 		select 1 from markrecord where userid=#{userID} and itemid=#{itemID} limit 1
@@ -28,7 +29,7 @@
 
 	<select id="queryMarkRecord" resultMap="item">
 		select
-		item.itemid,item.name,item.description,item.price,item.degree,item.pictureurl,item.publishtime,item.positionx,item.positiony
+		item.itemid,item.name,item.description,item.price,item.degree,item.category,item.pictureurl,item.publishtime,item.positionx,item.positiony,item.status
 		from
 		item, markrecord where item.itemid = markrecord.itemid and markrecord.userid = #{userID}
 	</select>

@@ -58,15 +58,15 @@ public class MarkRequestTest extends HttpRequestSender{
     }
     
     public void getMarkRecordTest(){
-        String url = "";
+        String url = "http://223.252.196.241:8080/item/myitem?userID=7fcee58da6e44de8af1bf99c969493e7&count=15&page=1";
         getRequest(url);
     }
     
     public static void main(String[] args) {
         MarkRequestTest test = new MarkRequestTest();
 //        test.addMarkRecordTest();
-        test.deleteMarkRecordTest();
-//        test.getMarkRecordTest();
+//        test.deleteMarkRecordTest();
+        test.getMarkRecordTest();
     }
     
 }
